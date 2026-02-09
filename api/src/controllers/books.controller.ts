@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Book, GetBooksQueryParams } from "../types/common";
 import { validateAndModifyGetBookQueryParams } from "../validators/queryParams.validators";
-import { deleteBook, getBook, getBooks, saveBook, updateBook } from "../services/books.service"
+import { deleteBook, getAIRecommendedBooks, getBook, getBooks, saveBook, updateBook } from "../services/books.service"
 import { validateBook } from "../validators/books.validators";
 import { BookNotFoundError, ValidationError } from "../exceptions/AppError";
 import { validateId } from "../validators/id.validation";
@@ -55,26 +55,29 @@ export const updateBooks = async (req: Request<{ id: string }, Book>, res: Respo
         } else {
             throw new ValidationError(isIdValid.message, 400);
         }
-        
+
     }
     else {
         throw new Error("Books Validaton failes");
     }
 }
-export const deleteBooks = async (req:Request<{id:string}>,res:Response) => {
-    const id=req.params.id;
-    const result=validateId(id);
-    if(result.success){
-        if(result.result !=undefined){
-            const bookPresent=deleteBook(result.result)
-            res.json({statusCode:200,data:bookPresent})
+export const deleteBooks = async (req: Request<{ id: string }>, res: Response) => {
+    const id = req.params.id;
+    const result = validateId(id);
+    if (result.success) {
+        if (result.result != undefined) {
+            const bookPresent = deleteBook(result.result)
+            res.json({ statusCode: 200, data: bookPresent })
         }
-        else{
+        else {
             throw new ValidationError(result.message, 400);
         }
     }
-    else{
-    throw new ValidationError("Id validation Error",400)
+    else {
+        throw new ValidationError("Id validation Error", 400)
     }
+}
+export const getSuggestion = async () => {
+    getAIRecommendedBooks()
 }
 

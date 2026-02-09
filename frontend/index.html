@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Books Library</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app__header">
+        <div>
+          <p class="eyebrow">Books Manager</p>
+          <h1>Library Dashboard</h1>
+          <p class="subtext">
+            Browse, add, and maintain the catalog using the API endpoints.
+          </p>
+        </div>
+        <div class="header__actions">
+          <button id="add-button" class="btn btn--primary">Add book</button>
+          <button id="suggest-button" class="btn btn--ghost">Get suggestion</button>
+        </div>
+      </header>
+
+      <main class="app__content">
+        <section class="panel panel--form">
+          <div class="panel__header">
+            <h2>Book details</h2>
+            <span id="form-status" class="status-pill">New</span>
+          </div>
+
+          <form id="book-form" class="book-form">
+            <label>
+              Title
+              <input type="text" name="title" placeholder="Enter title" required />
+            </label>
+            <label>
+              Author
+              <input type="text" name="author" placeholder="Enter author" required />
+            </label>
+            <label>
+              Description
+              <textarea
+                name="description"
+                placeholder="Optional short description"
+                rows="4"
+              ></textarea>
+            </label>
+            <label>
+              Rating
+              <select name="rating">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </label>
+            <div class="form__actions">
+              <button type="submit" class="btn btn--primary">Save</button>
+              <button type="button" id="cancel-edit" class="btn btn--ghost" disabled>
+                Cancel
+              </button>
+            </div>
+          </form>
+
+          <div class="detail-card">
+            <h3>Selected book</h3>
+            <p id="detail-title" class="detail__title">No book selected</p>
+            <p id="detail-author" class="detail__author"></p>
+            <p id="detail-description" class="detail__description"></p>
+            <p id="detail-rating" class="detail__rating"></p>
+          </div>
+        </section>
+
+        <section class="panel panel--list">
+          <div class="panel__toolbar">
+            <div class="search">
+              <input
+                id="search-input"
+                type="search"
+                placeholder="Search title or author"
+              />
+              <select id="rating-filter">
+                <option value="">All ratings</option>
+                <option value="5">5 stars</option>
+                <option value="4">4 stars</option>
+                <option value="3">3 stars</option>
+                <option value="2">2 stars</option>
+                <option value="1">1 star</option>
+              </select>
+            </div>
+            <div class="toolbar__actions">
+              <label>
+                Per page
+                <select id="limit-select">
+                  <option value="5">5</option>
+                  <option value="10" selected>10</option>
+                  <option value="20">20</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="list" id="books-list"></div>
+
+          <div class="pagination">
+            <button id="prev-page" class="btn btn--ghost">Previous</button>
+            <span id="page-info"></span>
+            <button id="next-page" class="btn btn--ghost">Next</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -3,16 +3,17 @@ import { prisma } from "../config/dbConfig"
 import { Book } from "../types/common";
 import { walkUpBindingElementsAndPatterns } from "typescript";
 import { BookNotFoundError } from "../exceptions/AppError";
+import { ai } from "../config/geminiConfig";
 export const getBooks = async ({ limit, page }: { limit: number, page: number }): Promise<any> => {
 
     try {
-        const result=await prisma.$transaction([
+        const result = await prisma.$transaction([
             prisma.books.findMany({
                 take: limit,
-                skip: (page-1) * limit
+                skip: (page - 1) * limit
             }),
             prisma.books.count({})])
-        return {message:"",data:{items:result[0],total:result[1]}};
+        return { message: "", data: { items: result[0], total: result[1] } };
     }
     catch (e: any) {
         throw e
@@ -73,4 +74,34 @@ export const deleteBook = async (id: number) => {
         throw e;
         // return { success: false, data: { error: "book not deleted yet" } }
     }
+}
+export const getAIRecommendedBooks = async () => {
+    run();
+}
+
+
+async function run() {
+    const response = await ai.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: "",
+        config: {
+            systemInstruction: `You are a librarian with vast knowledge of books 
+            Response should be in json as follows
+            There should be 4 response at one query ,
+            Don't repeat books again on another requset,
+            You should remember previous books so that it do not repeat again,
+            make sure you provide unqiue book each time     
+            Response : [{
+                    title: <title of book or book name>,
+                    author: <author of book>,
+                    description:<short description of book>,
+                    rating:<rate from 1 to 5 only>
+        }]
+            `,
+        }
+    });
+    const parseD=response.text as string;
+    let cleaned = parseD.replace(/```json|```/g, "");
+    console.log(cleaned)
+    
 }
